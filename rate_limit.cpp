@@ -3,6 +3,8 @@
 #include <mutex>
 #include <vector>
 #include <deque>
+#include <array>
+#include <algorithm>
 #include <numeric>
 #include <iostream>
 #include <iomanip>
@@ -166,11 +168,11 @@ public:
 	void printStat() {
 		std::lock_guard<std::mutex> guard(mLock);
 		std::cout << "  TimeSlice   | Successfull calls | Rate limited calls | RPS for last second" << std::endl;
-		for (int i = 0; i != mSuccessfullCalls.size(); ++i) {
+		for (size_t i = 0; i != mSuccessfullCalls.size(); ++i) {
 			std::cout << setfill('0') << setw(5) << 100 * (i) << "-" << setw(5) << 100 * (i + 1) << "ms |     "
 			          << setw(10) << mSuccessfullCalls[i] << "    |     "
 			          << setw(10) << mRateLimitedCalls[i] << "     |     "
-			          << std::accumulate(mSuccessfullCalls.begin() + std::max(0, i - 9),
+			          << std::accumulate(mSuccessfullCalls.begin() + std::max<size_t>(0, i - 9),
 			                             mSuccessfullCalls.begin() + i + 1, 0) << std::endl;
 		}
 	}
